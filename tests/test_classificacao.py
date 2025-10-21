@@ -4,6 +4,35 @@ from src.models.time import Time
 from src.models.campeonato import Campeonato
 
 
+def test_classificacao_ordenada_por_pontos():
+	
+	c = Campeonato("Brasileirao")
+	time_6pts = Time("Flamengo")
+	time_3pts = Time("Palmeiras")
+	time_0pts = Time("Santos")
+
+	
+	c.adicionar_time(time_0pts)
+	c.adicionar_time(time_6pts)
+	c.adicionar_time(time_3pts)
+
+	
+	time_6pts.adicionar_vitoria()
+	time_6pts.adicionar_vitoria()
+
+	
+	time_3pts.adicionar_vitoria()
+
+	
+
+	cls = c.classificacao()
+	
+	
+	assert cls[0] is time_6pts
+	assert cls[1] is time_3pts
+	assert cls[2] is time_0pts
+
+
 def test_classificacao_desempate_vitorias():
 	c = Campeonato("Brasileirao")
 	t1 = Time("Corinthians")
