@@ -14,9 +14,20 @@ class Campeonato:
         self.rodadas.append(r)
         return r
 
-    def classificacao(self):
-        # ordena por pontos, depois vitorias, saldo e gols marcados
-        return sorted(self.times, key=lambda t: (t.pontos, t.vitorias, t.saldo_gols(), t.gols_marcados), reverse=True)
+    def classificacao(self) -> list[Time]:
+        return sorted(
+            self.times,
+            key=self._criterios_desempate,
+            reverse=True
+        )
+    
+    def _criterios_desempate(self, time: Time) -> tuple:
+        return (
+            time.pontos,
+            time.vitorias,
+            time.saldo_gols(),
+            time.gols_marcados
+        )
 
     def buscar_time(self, nome: str) -> Time | None:
         for t in self.times:
