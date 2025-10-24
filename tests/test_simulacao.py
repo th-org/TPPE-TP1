@@ -15,12 +15,28 @@ def criar_campeonato_20_times():
     campeonato = Campeonato("Brasileirão Série A 2025")
     
     times = [
-        "Flamengo", "Palmeiras", "Atlético-MG", "Fluminense",
-        "Botafogo", "Bragantino", "Athletico-PR", "Internacional",
-        "São Paulo", "Corinthians", "Fortaleza", "Santos",
-        "Goiás", "Vasco", "Bahia", "Cruzeiro",
-        "Coritiba", "América-MG", "Cuiabá", "Avaí"
-    ]
+    "Atlético-MG",
+    "Bahia",
+    "Botafogo",
+    "Bragantino",
+    "Ceará",
+    "Corinthians",
+    "Cruzeiro",
+    "Flamengo",
+    "Fluminense",
+    "Fortaleza",
+    "Grêmio",
+    "Internacional",
+    "Juventude",
+    "Mirassol",
+    "Palmeiras",
+    "Santos",
+    "São Paulo",
+    "Sport",
+    "Vasco",
+    "Vitória"
+]
+
     
     for nome in times:
         campeonato.adicionar_time(Time(nome))
