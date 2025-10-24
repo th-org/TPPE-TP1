@@ -11,33 +11,12 @@ class Campeonato:
     def adicionar_time(self, time: Time):
         self.times.append(time)
 
-    def criar_rodada(self, numero: int) -> Rodada:
-        r = Rodada(numero)
-        self.rodadas.append(r)
-        return r
-
-    def classificacao(self) -> list[Time]:
-        return sorted(
-            self.times,
-            key=self._criterios_desempate,
-            reverse=True
-        )
-    
-    def _criterios_desempate(self, time: Time) -> tuple:
-        return (
-            time.pontos,
-            time.vitorias,
-            time.saldo_gols(),
-            time.gols_marcados
-        )
-
-    def buscar_time(self, nome: str) -> Time | None:
-        for t in self.times:
-            if t.nome == nome:
-                return t
-        return None
-
-    def gerar_rodadas(self) -> None:
+    def criar_rodada(self, numero: int = None) -> None:
+        if numero is not None:
+            r = Rodada(numero)
+            self.rodadas.append(r)
+            return r
+        
         if len(self.times) < 2:
             raise ValueError()
 
@@ -76,3 +55,24 @@ class Campeonato:
 
             for partida in rodada_ida.partidas:
                 rodada_volta.adicionar_partida(Partida(partida.visitante, partida.mandante))
+
+    def classificacao(self) -> list[Time]:
+        return sorted(
+            self.times,
+            key=self._criterios_desempate,
+            reverse=True
+        )
+    
+    def _criterios_desempate(self, time: Time) -> tuple:
+        return (
+            time.pontos,
+            time.vitorias,
+            time.saldo_gols(),
+            time.gols_marcados
+        )
+
+    def buscar_time(self, nome: str) -> Time | None:
+        for t in self.times:
+            if t.nome == nome:
+                return t
+        return None
