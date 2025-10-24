@@ -17,7 +17,6 @@ Os testes estão localizados dentro da pasta [`tests/`](tests/) e são executado
 | `test_resultado.py` | Testes de registro de placares e atualização de resultados | 6 |
 | `test_simulacao.py` | Testes de simulação completa das 38 rodadas do campeonato | 9 |
 | `test_tabela.py` | Testes da geração da tabela de classificação final, campeões, zonas e estatísticas | 11 |
-
 | **Total** |  | **42** |
 
 ---
@@ -87,11 +86,11 @@ assert exit_code == 0, "Alguns testes falharam na suíte completa"
 
 Caso algum teste falhe, o script retorna uma mensagem de erro, garantindo que o pipeline ou o ambiente de CI detecte falhas automaticamente.
 
-#### Script de Demonstração da Tabela de Classificação Final
+### Script de Demonstração da Tabela de Classificação Final
 
 Este script serve para demonstrar a **tabela de classificação final**.
 
-##### Como Executar
+#### Como Executar
 
 Use o seguinte comando no terminal:
 
