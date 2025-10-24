@@ -76,3 +76,82 @@ class Campeonato:
             if t.nome == nome:
                 return t
         return None
+
+    def gerar_tabela_final(self) -> str:
+        """
+        Gera tabela de classificação final formatada para console.
+        
+        A tabela inclui:
+        - Posição, nome do time, pontos, vitórias, empates, derrotas
+        - Gols marcados, gols sofridos e saldo de gols
+        - Identificação de zonas especiais:
+          * 1º lugar: Campeão 🏆
+          * 2º ao 6º: Libertadores 🌎
+          * 7º ao 12º: Sul-Americana 🏆
+          * 17º ao 20º: Rebaixados ⬇️
+        
+        Returns:
+            str: Tabela formatada para impressão em console
+        """
+        if len(self.times) == 0:
+            return "Nenhum time cadastrado no campeonato."
+        
+        classificacao = self.classificacao()
+        
+        # Cabeçalho
+        largura_total = 95
+        tabela = "=" * largura_total + "\n"
+        tabela += f"{self.nome.upper()} - CLASSIFICAÇÃO FINAL\n".center(largura_total)
+        tabela += "=" * largura_total + "\n"
+        
+        # Colunas
+        tabela += f"{'Pos':<5} {'Time':<20} {'P':<5} {'V':<5} {'E':<5} {'D':<5} "
+        tabela += f"{'GP':<5} {'GC':<5} {'SG':<6} {'Zona'}\n"
+        tabela += "-" * largura_total + "\n"
+        
+        # Dados dos times
+        for i, time in enumerate(classificacao, 1):
+            # Determina a zona do time
+            zona = self._identificar_zona(i)
+            
+            # Formata os dados
+            saldo = time.saldo_gols()
+            saldo_str = f"+{saldo}" if saldo > 0 else str(saldo)
+            
+            linha = f"{i:<5} {time.nome:<20} {time.pontos:<5} {time.vitorias:<5} "
+            linha += f"{time.empates:<5} {time.derrotas:<5} {time.gols_marcados:<5} "
+            linha += f"{time.gols_sofridos:<5} {saldo_str:<6} {zona}\n"
+            
+            tabela += linha
+        
+        tabela += "=" * largura_total + "\n"
+        
+        # Legenda
+        tabela += "\nLegenda:\n"
+        tabela += "  🏆 CAMPEÃO - Campeão brasileiro\n"
+        tabela += "  🌎 Libertadores - Classificados para Copa Libertadores (1º ao 6º)\n"
+        tabela += "  🏆 Sul-Americana - Classificados para Copa Sul-Americana (7º ao 12º)\n"
+        tabela += "  ⬇️  REBAIXADO - Rebaixados para Série B (17º ao 20º)\n"
+        
+        return tabela
+    
+    def _identificar_zona(self, posicao: int) -> str:
+        """
+        Identifica a zona especial do time baseado em sua posição.
+        
+        Args:
+            posicao: Posição do time na classificação (1-20)
+            
+        Returns:
+            str: Identificação da zona especial
+        """
+        if posicao == 1:
+            return "🏆 CAMPEÃO"
+        elif posicao <= 6:
+            return "🌎 Libertadores"
+        elif posicao <= 12:
+            return "🏆 Sul-Americana"
+        elif posicao >= 17:
+            return "⬇️  REBAIXADO"
+        else:
+            return ""
