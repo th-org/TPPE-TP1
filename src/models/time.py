@@ -9,14 +9,16 @@ class Time:
         self.gols_sofridos = 0
 
     def registrar_gols_marcados(self, n: int):
-        if n < 0:
-            raise ValueError("Gols marcados não podem ser negativos")
+        self._validar_gols(n)
         self.gols_marcados += n
 
     def registrar_gols_sofridos(self, n: int):
-        if n < 0:
-            raise ValueError("Gols sofridos não podem ser negativos")
+        self._validar_gols(n)
         self.gols_sofridos += n
+
+    def _validar_gols(self, n: int):
+        if n < 0:
+            raise ValueError("Gols não podem ser negativos")
 
     def adicionar_vitoria(self):
         self.vitorias += 1

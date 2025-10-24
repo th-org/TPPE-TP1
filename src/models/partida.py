@@ -20,20 +20,19 @@ class Partida:
 		self.gols_visitante = gols_v
 
 		# atualizar estatísticas dos times
-		self.mandante.registrar_gols_marcados(gols_m)
-		self.mandante.registrar_gols_sofridos(gols_v)
-		self.visitante.registrar_gols_marcados(gols_v)
-		self.visitante.registrar_gols_sofridos(gols_m)
+		for time, gols_marcados, gols_sofridos in [(self.mandante, gols_m, gols_v),
+			(self.visitante, gols_v, gols_m)]:
+			time.registrar_gols_marcados(gols_marcados)
+			time.registrar_gols_sofridos(gols_sofridos)
 
 		# definir vencedor/empate
-		if gols_m > gols_v:
+		diferenca = gols_m - gols_v
+		if diferenca > 0:
 			self.mandante.adicionar_vitoria()
 			self.visitante.adicionar_derrota()
-
-		elif gols_v > gols_m:
+		elif diferenca < 0:
 			self.visitante.adicionar_vitoria()
 			self.mandante.adicionar_derrota()
-
 		else:
 			self.mandante.adicionar_empate()
 			self.visitante.adicionar_empate()
