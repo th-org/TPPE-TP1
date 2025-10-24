@@ -1,6 +1,3 @@
-"""
-Testes para simulação completa de campeonato com 38 rodadas.
-"""
 import pytest
 import random
 
@@ -9,9 +6,6 @@ from src.models.time import Time
 
 
 def criar_campeonato_20_times():
-    """
-    Cria um campeonato com os 20 times da Série A.
-    """
     campeonato = Campeonato("Brasileirão Série A 2025")
     
     times = [
@@ -45,13 +39,6 @@ def criar_campeonato_20_times():
 
 
 def simular_placar_aleatorio():
-    """
-    Gera um placar aleatório realista para uma partida.
-    
-    Returns:
-        tuple: (gols_mandante, gols_visitante)
-    """
-    # Distribuição mais realista de placares
     placares_possiveis = [
         (0, 0), (1, 0), (2, 0), (3, 0), (4, 0),
         (0, 1), (1, 1), (2, 1), (3, 1),
@@ -63,14 +50,6 @@ def simular_placar_aleatorio():
 
 
 def test_gerar_38_rodadas_com_20_times():
-    """
-    Testa se o campeonato gera exatamente 38 rodadas para 20 times.
-    
-    Com 20 times:
-    - Turno: 19 rodadas (cada time joga contra todos os outros uma vez)
-    - Returno: 19 rodadas (jogos com mando invertido)
-    - Total: 38 rodadas
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -79,9 +58,6 @@ def test_gerar_38_rodadas_com_20_times():
 
 
 def test_cada_rodada_tem_10_partidas():
-    """
-    Testa se cada rodada tem exatamente 10 partidas (20 times / 2).
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -91,9 +67,6 @@ def test_cada_rodada_tem_10_partidas():
 
 
 def test_todos_os_times_jogam_em_cada_rodada():
-    """
-    Testa se todos os 20 times participam de cada rodada.
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -108,11 +81,6 @@ def test_todos_os_times_jogam_em_cada_rodada():
 
 
 def test_total_de_380_partidas_no_campeonato():
-    """
-    Testa se o campeonato tem exatamente 380 partidas no total.
-    
-    Cálculo: 38 rodadas × 10 partidas = 380 partidas
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -123,9 +91,6 @@ def test_total_de_380_partidas_no_campeonato():
 
 
 def test_cada_time_joga_38_partidas():
-    """
-    Testa se cada time joga exatamente 38 partidas ao longo do campeonato.
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -142,9 +107,6 @@ def test_cada_time_joga_38_partidas():
 
 
 def test_cada_time_joga_19_vezes_em_casa():
-    """
-    Testa se cada time é mandante em exatamente 19 partidas.
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -160,56 +122,33 @@ def test_cada_time_joga_19_vezes_em_casa():
 
 
 def test_simulacao_completa_com_resultados():
-    """
-    Testa simulação completa de um campeonato com resultados aleatórios.
-    
-    Verifica:
-    - Todas as partidas são jogadas
-    - Classificação é atualizada corretamente
-    - Todos os times têm estatísticas consistentes
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
-    # Simula resultados para todas as partidas
-    random.seed(42)  # Para resultados reproduzíveis nos testes
+    random.seed(42)
     
     for rodada in campeonato.rodadas:
         for partida in rodada.partidas:
             gols_mandante, gols_visitante = simular_placar_aleatorio()
             partida.registrar_placar(gols_mandante, gols_visitante)
     
-    # Verifica consistência das estatísticas
     for time in campeonato.times:
-        # Total de jogos = vitórias + empates + derrotas
         total_jogos = time.vitorias + time.empates + time.derrotas
         assert total_jogos == 38, \
             f"{time.nome}: total de jogos inconsistente ({total_jogos})"
         
-        # Pontos devem ser consistentes
         pontos_calculados = (time.vitorias * 3) + (time.empates * 1)
         assert time.pontos == pontos_calculados, \
             f"{time.nome}: pontos inconsistentes"
         
-        # Saldo deve ser consistente
         assert time.saldo_gols() == time.gols_marcados - time.gols_sofridos, \
             f"{time.nome}: saldo de gols inconsistente"
 
 
 def test_classificacao_apos_simulacao_completa():
-    """
-    Testa se a classificação funciona corretamente após simulação completa.
-    
-    Verifica:
-    - Classificação retorna todos os 20 times
-    - Times estão ordenados corretamente
-    - Primeiro colocado tem mais/igual pontos que segundo
-    - Último colocado tem menos/igual pontos que penúltimo
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
-    # Simula resultados
     random.seed(42)
     for rodada in campeonato.rodadas:
         for partida in rodada.partidas:
@@ -218,25 +157,19 @@ def test_classificacao_apos_simulacao_completa():
     
     classificacao = campeonato.classificacao()
     
-    # Verifica que todos os times estão na classificação
     assert len(classificacao) == 20, \
         f"Classificação deveria ter 20 times, mas tem {len(classificacao)}"
     
-    # Verifica ordenação por pontos
     for i in range(len(classificacao) - 1):
         time_atual = classificacao[i]
         time_seguinte = classificacao[i + 1]
         
-        # O time anterior deve ter >= pontos que o seguinte
         assert time_atual.pontos >= time_seguinte.pontos, \
             f"Classificação incorreta: {time_atual.nome} ({time_atual.pontos}pts) " \
             f"está acima de {time_seguinte.nome} ({time_seguinte.pontos}pts)"
 
 
 def test_campeao_tem_mais_pontos_ou_melhor_criterio():
-    """
-    Testa se o campeão (1º colocado) realmente tem a melhor campanha.
-    """
     campeonato = criar_campeonato_20_times()
     campeonato.criar_rodada()
     
@@ -249,7 +182,6 @@ def test_campeao_tem_mais_pontos_ou_melhor_criterio():
     classificacao = campeonato.classificacao()
     campeao = classificacao[0]
     
-    # Verifica que nenhum outro time é melhor que o campeão
     for time in classificacao[1:]:
         criterios_campeao = (campeao.pontos, campeao.vitorias, 
                             campeao.saldo_gols(), campeao.gols_marcados)

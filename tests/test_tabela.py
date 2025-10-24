@@ -1,6 +1,3 @@
-"""
-Testes para geração de tabela de classificação final.
-"""
 import pytest
 import random
 
@@ -9,9 +6,6 @@ from src.models.time import Time
 
 
 def criar_campeonato_e_simular():
-    """
-    Cria um campeonato com 20 times e simula todos os jogos.
-    """
     campeonato = Campeonato("Brasileirão 2025")
     
     times = [
@@ -27,7 +21,6 @@ def criar_campeonato_e_simular():
     
     campeonato.criar_rodada()
     
-    # Simula resultados
     random.seed(42)
     placares = [(0,0), (1,0), (2,0), (3,0), (1,1), (2,1), (2,2)]
     
@@ -40,9 +33,6 @@ def criar_campeonato_e_simular():
 
 
 def test_gerar_tabela_final_retorna_string():
-    """
-    Testa se o método gerar_tabela_final() retorna uma string.
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -51,9 +41,6 @@ def test_gerar_tabela_final_retorna_string():
 
 
 def test_tabela_contem_titulo():
-    """
-    Testa se a tabela contém o título do campeonato.
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -62,9 +49,6 @@ def test_tabela_contem_titulo():
 
 
 def test_tabela_contem_todos_os_times():
-    """
-    Testa se a tabela contém todos os 20 times.
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -73,13 +57,9 @@ def test_tabela_contem_todos_os_times():
 
 
 def test_tabela_contem_cabecalho():
-    """
-    Testa se a tabela contém o cabeçalho com colunas.
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
-    # Verifica se contém indicadores de colunas principais
     cabecalho_elementos = ['Pos', 'Time', 'P', 'V', 'E', 'D', 'GP', 'GC', 'SG']
     
     for elemento in cabecalho_elementos:
@@ -87,26 +67,18 @@ def test_tabela_contem_cabecalho():
 
 
 def test_tabela_identifica_campeao():
-    """
-    Testa se a tabela identifica o campeão (1º colocado).
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     classificacao = campeonato.classificacao()
     
-    # Verifica se há indicação de campeão
     assert "CAMPEÃO" in tabela or "🏆" in tabela, \
         "Tabela deve identificar o campeão"
     
-    # Verifica se o nome do campeão está na tabela
     campeao = classificacao[0]
     assert campeao.nome in tabela, "Nome do campeão deve estar na tabela"
 
 
 def test_tabela_identifica_zona_libertadores():
-    """
-    Testa se a tabela identifica os times da zona de Libertadores (1º ao 6º).
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -115,9 +87,7 @@ def test_tabela_identifica_zona_libertadores():
 
 
 def test_tabela_identifica_zona_sulamericana():
-    """
-    Testa se a tabela identifica os times da zona de Sul-Americana (7º ao 12º).
-    """
+
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -126,9 +96,6 @@ def test_tabela_identifica_zona_sulamericana():
 
 
 def test_tabela_identifica_zona_rebaixamento():
-    """
-    Testa se a tabela identifica os times rebaixados (17º ao 20º).
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     
@@ -137,33 +104,25 @@ def test_tabela_identifica_zona_rebaixamento():
 
 
 def test_tabela_mostra_estatisticas_completas():
-    """
-    Testa se a tabela mostra todas as estatísticas de cada time.
-    """
+
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     classificacao = campeonato.classificacao()
     
-    # Pega o campeão para verificar se seus dados estão na tabela
     campeao = classificacao[0]
     
-    # Converte para string para buscar na tabela
     assert str(campeao.pontos) in tabela, "Pontos do campeão devem estar na tabela"
     assert str(campeao.vitorias) in tabela, "Vitórias devem estar na tabela"
 
 
 def test_tabela_ordenada_por_classificacao():
-    """
-    Testa se a tabela está ordenada pela classificação correta.
-    """
     campeonato = criar_campeonato_e_simular()
     tabela = campeonato.gerar_tabela_final()
     classificacao = campeonato.classificacao()
     
-    # Verifica se os times aparecem na ordem correta na tabela
     linhas = tabela.split('\n')
     
-    # Encontra as linhas com dados dos times (não cabeçalho/separadores)
+
     times_na_tabela = []
     for linha in linhas:
         for time in classificacao:
@@ -171,13 +130,11 @@ def test_tabela_ordenada_por_classificacao():
                 times_na_tabela.append(time.nome)
                 break
     
-    # Remove duplicatas mantendo ordem
     times_unicos = []
     for time in times_na_tabela:
         if time not in times_unicos:
             times_unicos.append(time)
     
-    # Verifica se a ordem na tabela corresponde à classificação
     times_classificacao = [t.nome for t in classificacao]
     
     assert times_unicos == times_classificacao[:len(times_unicos)], \
@@ -185,9 +142,6 @@ def test_tabela_ordenada_por_classificacao():
 
 
 def test_tabela_com_campeonato_vazio():
-    """
-    Testa se a geração de tabela funciona com campeonato sem times.
-    """
     campeonato = Campeonato("Teste Vazio")
     tabela = campeonato.gerar_tabela_final()
     

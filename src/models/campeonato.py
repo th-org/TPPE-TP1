@@ -31,7 +31,6 @@ class Campeonato:
         jogos = times[1:]
         numero_rodada = 1
 
-        # ida
         for _ in range(rodadas_ida):
             rodada = self.criar_rodada(numero_rodada)
             numero_rodada += 1
@@ -44,10 +43,8 @@ class Campeonato:
                 fora = jogos[-j]
                 if casa is not None and fora is not None:
                     rodada.adicionar_partida(Partida(casa, fora))
-            # jogam todos contra todos
             jogos = [jogos[-1]] + jogos[:-1]
 
-        # volta
         for i in range(rodadas_ida):
             rodada_ida = self.rodadas[i]
             rodada_volta = self.criar_rodada(numero_rodada)
@@ -78,43 +75,24 @@ class Campeonato:
         return None
 
     def gerar_tabela_final(self) -> str:
-        """
-        Gera tabela de classificação final formatada para console.
-        
-        A tabela inclui:
-        - Posição, nome do time, pontos, vitórias, empates, derrotas
-        - Gols marcados, gols sofridos e saldo de gols
-        - Identificação de zonas especiais:
-          * 1º lugar: Campeão 🏆
-          * 2º ao 6º: Libertadores 🌎
-          * 7º ao 12º: Sul-Americana 🏆
-          * 17º ao 20º: Rebaixados ⬇️
-        
-        Returns:
-            str: Tabela formatada para impressão em console
-        """
+       
         if len(self.times) == 0:
             return "Nenhum time cadastrado no campeonato."
         
         classificacao = self.classificacao()
         
-        # Cabeçalho
         largura_total = 95
         tabela = "=" * largura_total + "\n"
         tabela += f"{self.nome.upper()} - CLASSIFICAÇÃO FINAL\n".center(largura_total)
         tabela += "=" * largura_total + "\n"
         
-        # Colunas
         tabela += f"{'Pos':<5} {'Time':<20} {'P':<5} {'V':<5} {'E':<5} {'D':<5} "
         tabela += f"{'GP':<5} {'GC':<5} {'SG':<6} {'Zona'}\n"
         tabela += "-" * largura_total + "\n"
         
-        # Dados dos times
         for i, time in enumerate(classificacao, 1):
-            # Determina a zona do time
             zona = self._identificar_zona(i)
             
-            # Formata os dados
             saldo = time.saldo_gols()
             saldo_str = f"+{saldo}" if saldo > 0 else str(saldo)
             
@@ -126,7 +104,6 @@ class Campeonato:
         
         tabela += "=" * largura_total + "\n"
         
-        # Legenda
         tabela += "\nLegenda:\n"
         tabela += "  🏆 CAMPEÃO - Campeão brasileiro\n"
         tabela += "  🌎 Libertadores - Classificados para Copa Libertadores (1º ao 6º)\n"
@@ -136,15 +113,7 @@ class Campeonato:
         return tabela
     
     def _identificar_zona(self, posicao: int) -> str:
-        """
-        Identifica a zona especial do time baseado em sua posição.
-        
-        Args:
-            posicao: Posição do time na classificação (1-20)
-            
-        Returns:
-            str: Identificação da zona especial
-        """
+    
         if posicao == 1:
             return "🏆 CAMPEÃO"
         elif posicao <= 6:
