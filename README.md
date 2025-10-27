@@ -1,3 +1,15 @@
+## Trabalho prático 1 - TDD
+
+### Grupo
+
+|Matrícula | Aluno |
+| -- | -- |
+| 22/2029243  | Victor Hugo dos Santos Bernardes |
+| 22/2015186 | Manoela Silvestre Garcia Chaves |
+| 22/2029243  | Thales Henrique Euflauzino dos Santos |
+| 21/1039671 | Pedro Lopes da Cunha |
+| 20/2015868  | Alexandre Lema Xavier Junior  |
+
 ## 🧪 Suíte de Testes Completa — TPPE TP1
 
 Este projeto utiliza **[pytest](https://docs.pytest.org/)** para garantir a qualidade e o correto funcionamento de todos os componentes do sistema.  
