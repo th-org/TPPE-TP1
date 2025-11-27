@@ -1,6 +1,7 @@
 from .time import Time
 from .rodada import Rodada
 from .partida import Partida
+from .gerador_rodadas import GeradorRodadas
 
 class Campeonato:
     def __init__(self, nome: str):
@@ -11,47 +12,31 @@ class Campeonato:
     def adicionar_time(self, time: Time):
         self.times.append(time)
 
-    def criar_rodada(self, numero: int = None) -> None:
-        if numero is not None:
-            r = Rodada(numero)
-            self.rodadas.append(r)
-            return r
+    def criar_rodada(self, numero: int = None) -> Rodada | None:
+        """
+        Cria rodadas para o campeonato.
         
-        if len(self.times) < 2:
-            raise ValueError()
-
-        times = self.times.copy()
-
-        if len(times) % 2 != 0:
-            times.append(None)
-
-        n = len(times)
-        rodadas_ida = n - 1
-        fixo = times[0]
-        jogos = times[1:]
-        numero_rodada = 1
-
-        for _ in range(rodadas_ida):
-            rodada = self.criar_rodada(numero_rodada)
-            numero_rodada += 1
-
-            if fixo is not None and jogos[0] is not None:
-                rodada.adicionar_partida(Partida(fixo, jogos[0]))
-
-            for j in range(1, n // 2):
-                casa = jogos[j]
-                fora = jogos[-j]
-                if casa is not None and fora is not None:
-                    rodada.adicionar_partida(Partida(casa, fora))
-            jogos = [jogos[-1]] + jogos[:-1]
-
-        for i in range(rodadas_ida):
-            rodada_ida = self.rodadas[i]
-            rodada_volta = self.criar_rodada(numero_rodada)
-            numero_rodada += 1
-
-            for partida in rodada_ida.partidas:
-                rodada_volta.adicionar_partida(Partida(partida.visitante, partida.mandante))
+        Se um número for fornecido, cria apenas uma rodada vazia com esse número.
+        Se nenhum número for fornecido, gera todas as rodadas do campeonato
+        usando o algoritmo round-robin (turno e returno).
+        
+        Args:
+            numero: Número da rodada a ser criada (opcional)
+            
+        Returns:
+            A rodada criada (quando numero é fornecido) ou None
+            
+        Raises:
+            ValueError: Se não houver times suficientes (mínimo 2)
+        """
+        if numero is not None:
+            rodada = Rodada(numero)
+            self.rodadas.append(rodada)
+            return rodada
+        
+        # Usa a classe GeradorRodadas para encapsular a lógica complexa
+        gerador = GeradorRodadas(self.times, self.rodadas)
+        gerador.gerar_todas_rodadas()
 
     def classificacao(self) -> list[Time]:
         return sorted(
